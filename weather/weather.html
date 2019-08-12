@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>weather</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        li {
+            list-style: none;
+        }
+        .clearfix:after {
+            content:"";
+            display: block;
+            clear: both;
+        }
+        .col-xs-1,.col-xs-2,.col-xs-3,.col-xs-4,.col-xs-5,.col-xs-6,.col-xs-7,.col-xs-8,
+        .col-xs-9,.col-xs-10,.col-xs-11,.col-xs-12 {
+            float: left;
+        }
+        .col-xs-1 {
+            width: 8.33333333333%;
+        }
+        .col-xs-2 {
+            width: 16.6666666666%;
+        }
+        .col-xs-3 {
+            width: 25%;
+        }
+        .col-xs-4 {
+            width: 33.3333333333%;
+        }
+        .col-xs-5 {
+            width: 41.6666666666%;
+        }
+        .col-xs-6 {
+            width: 50%;
+        }
+        .col-xs-7 {
+            width: 58.3333333333%;
+        }
+        .col-xs-8 {
+            width: 66.6666666666%;
+        }
+        .col-xs-9 {
+            width: 75%;
+        }
+        .col-xs-10 {
+            width: 83.3333333333%;
+        }
+        .col-xs-11 {
+            width: 91.6666666666%;
+        }
+        .col-xs-12 {
+            width: 100%
+        }
+        @font-face {
+            font-family: 'iconfont';  /* project id 1345125 */
+            src: url('//at.alicdn.com/t/font_1345125_eyjwdzc212d.eot');
+            src: url('//at.alicdn.com/t/font_1345125_eyjwdzc212d.eot?#iefix') format('embedded-opentype'),
+            url('//at.alicdn.com/t/font_1345125_eyjwdzc212d.woff2') format('woff2'),
+            url('//at.alicdn.com/t/font_1345125_eyjwdzc212d.woff') format('woff'),
+            url('//at.alicdn.com/t/font_1345125_eyjwdzc212d.ttf') format('truetype'),
+            url('//at.alicdn.com/t/font_1345125_eyjwdzc212d.svg#iconfont') format('svg');
+        }
+        .icon {
+            width: 100px; height: 100px;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+        .iu {
+            font-family:"iconfont" !important;
+            font-size:50px;font-style:normal;
+            -webkit-font-smoothing: antialiased;
+            -webkit-text-stroke-width: 0.2px;
+            -moz-osx-font-smoothing: grayscale;
+            color: white;
+        }
+        .iconfont{
+            font-family:"iconfont" !important;
+            font-size:20px;font-style:normal;
+            -webkit-font-smoothing: antialiased;
+            -webkit-text-stroke-width: 0.2px;
+            -moz-osx-font-smoothing: grayscale;
+            margin: 0 10px;
+        }
+        body {
+            background-image:url(img/1.jpg);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            background-size:100% 100% ;
+        }
+        .fuzzy {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: inherit;
+            filter: blur(5px);
+        }
+        .panel {
+            background-image: url(img/1.jpg);
+            background-size: 100%;
+            background-position: center;
+            border-radius: 20px;
+            position: absolute;
+            width: 1000px;
+            height: 600px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            z-index: 2;
+        }
+        .msg {
+            width: 100%;
+            height: 25%;
+            position: absolute;
+            bottom: 0;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            background-color: rgba(128, 128, 128, 0.8);
+        }
+        .msg li {
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid deeppink;
+            height: 100%;
+            color: white;
+        }
+        .today_m1,.today_m2 {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+        }
+        .today_m1 {
+            padding-top: 15px;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        .today_m1 .real_TEMP {
+              font-size: 50px;
+          }
+        .today_m2 span {
+              padding: 5px;
+              border-radius: 5px;
+              background-color: rgba(0,0,0,0.5);
+        }
+        .col-xs-2 div{
+            text-align: center;
+            font-size: 20px;
+        }
+
+
+        .list {
+            position: absolute;
+            bottom: 25%;
+            width: 40%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            color: lightblue;
+        }
+        .list li {
+            text-align: center;
+            flex-grow: 1;
+            border-bottom: 3px solid #008b8b;
+            border-radius: 10px 10px 0 0;
+            cursor: pointer;
+        }
+        .clicked {
+            background: #008b8b;
+        }
+        .searchBtn {
+            font-size:25px;
+            vertical-align: middle;
+        }
+        .search {
+            border-style: none;
+            padding: 10px;
+            max-width: 150px;
+            font-size: 20px;
+            border-radius: 50px;
+            caret-color: white;
+            background-color: rgba(34, 57, 66, 0.2);
+            vertical-align: middle;
+        }
+        .searchBar {
+            position: absolute;
+            top:10%;
+            left: 5%;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+        .ctName {
+            font-size: 50px;
+            color: white;
+        }
+        .location {
+            position: absolute;
+            top: 10%;
+            right: 5%;
+            text-align: right;
+        }
+        .time {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="fuzzy"></div>
+    <div class="panel">
+        <div class="msg clearfix">
+            <li class="today col-xs-5">
+                <div class="today_m1">
+                    <span class="real_TEMP"></span>
+                    <svg class="icon" aria-hidden="true">
+                        <use xlink:href="#iconduoyun"></use>
+                    </svg>
+                </div>
+                <div class="today_m2">
+                    <span class="today_Date"></span>
+                    <span class="temp_of_range"></span>
+                </div>
+            </li>
+            <li class="col-xs-2">
+                <div class="date"></div>
+                <div class="weather"></div>
+                <div class="temp"></div>
+            </li>
+            <li class="col-xs-2">
+                <div class="date"></div>
+                <div class="weather"></div>
+                <div class="temp"></div>
+            </li>
+            <li class="col-xs-2">
+                <div class="date"></div>
+                <div class="weather"></div>
+                <div class="temp"></div>
+            </li>
+        </div>
+        <div class="searchBar">
+            <input type="text" class="search" placeholder="城市">
+            <i class="iconfont searchBtn">&#xe62c</i>
+        </div>
+        <ul class="list">
+            <li class="clicked"><i class="iconfont">&#xe603</i>Weather</li>
+            <li><i class="iconfont">&#xe729</i>Events</li>
+            <li><i class="iconfont">&#xe696</i>Gallery</li>
+        </ul>
+        <div class="location">
+            <i class="iu">&#xe695</i>
+            <span class="ctName"></span>
+            <span class="time"></span>
+        </div>
+    </div>
+<script src="//at.alicdn.com/t/font_1345125_eyjwdzc212d.js"></script>
+<script>
+    var time = new Date();
+    console.log(time);
+    var xhr = new XMLHttpRequest();
+    xhr.open("get","http://api.jirengu.com/getWeather.php",true);
+    xhr.onload = function () {
+        if (( xhr.status >= 200 && xhr.status <= 300) || xhr.status == 304) {
+                var data = xhr.responseText;
+                var results = JSON.parse(data).results;
+                var currentCity = results[0].currentCity;
+                document.querySelector(".ctName").innerText = currentCity;
+
+                //今日气象概况
+                var today = results[0].weather_data[0];//date：星期 日期 实时温度，temperature: 温度范围，weather: 天气状况，wind:风力情况
+                var todaypm2_5 = results[0].pm25;
+                var currTemperature = today.date.toString().match(/\d{2}℃/);
+                var todayDate = today.date.toString().match(/周.*日/)[0];
+                var tempRange = today.temperature.toString()
+                document.querySelector(".today_m1 .real_TEMP").innerText = currTemperature;
+                document.querySelector(".today_m2 .today_Date").innerText = todayDate;
+                document.querySelector(".today_m2 .temp_of_range").innerText = tempRange + "  PM2.5: " + todaypm2_5;
+
+                //未来几日气象概况
+                var afterDay= results[0].weather_data;
+                for(var i = 0;i <= afterDay.length; i++){
+                    document.querySelectorAll(".msg li .date")[i].innerText = afterDay[i+1].date;
+                    //document.querySelectorAll(".msg li .weather")[i].innerText = afterDay[i+1].weather;
+                    weatherIcon(afterDay[i+1].weather,i);
+                    document.querySelectorAll(".msg li .temp")[i].innerText = afterDay[i+1].temperature;
+                    //document.querySelectorAll(".msg li")[i].innerText = afterDay[i].date + afterDay[i].temperature + afterDay[i].weather + afterDay[i].wind
+                }
+
+                //根据天气调整气象图标
+                function weatherIcon (str,i) {
+                    function logoChoose(logoname) {
+                        document.querySelectorAll(".msg li .weather")[i].innerHTML = "<svg class=\"icon\" aria-hidden=\"true\">\n" +
+                            "<use xlink:href=\"#icon" + logoname + "\"></use></svg>";
+                    }
+                    if(/^晴/.test(str)){
+                        logoChoose("qing");
+                    }
+                    if(/^多云/.test(str)){
+                        logoChoose("duoyun");
+                    }
+                    if(/^阴/.test(str)){
+                        logoChoose("yin");
+                    }
+                    if(/^小雨/.test(str)){
+                        logoChoose("xiaoyu");
+                    }
+                    if(/^中雨/.test(str)){
+                        logoChoose("zhongyu");
+                    }
+                    if(/^大雨/.test(str)){
+                        logoChoose("dayu");
+                    }
+                    if(/^雷阵雨/.test(str)){
+                        logoChoose("leizhenyu");
+                    }
+                    if(/^阵雨/.test(str)){
+                        logoChoose("zhenyu");
+                    }
+                    if(/^暴雨/.test(str)){
+                        logoChoose("baoyu");
+                    }
+                    if(/^大暴雨/.test(str)){
+                        logoChoose("dabaoyu");
+                    }
+                    if(/^雷阵雨伴冰雹/.test(str)){
+                        logoChoose("leizhenyubanbingbao");
+                    }
+                    if(/^特大暴雨/.test(str)){
+                        logoChoose("tedabaoyu");
+                    }
+                    if(/^冻雨/.test(str)){
+                        logoChoose("dongyu");
+                    }
+                    if(/^雨夹雪/.test(str)){
+                        logoChoose("yujiaxue");
+                    }
+                    if(/^小雪/.test(str)){
+                        logoChoose("xiaoxue");
+                    }
+                    if(/^中雪/.test(str)){
+                        logoChoose("zhongxue");
+                    }
+                    if(/^大雪/.test(str)){
+                        logoChoose("daxue");
+                    }
+                    if(/^阵雪/.test(str)){
+                        logoChoose("zhenxue");
+                    }
+                    if(/^暴雪/.test(str)){
+                        logoChoose("baoxue");
+                    }
+                    if(/^雾/.test(str)){
+                        logoChoose("wu");
+                    }
+                    if(/^扬沙/.test(str)){
+                        logoChoose("yangsha");
+                    }
+                    if(/^浮尘/.test(str)){
+                        logoChoose("fuchen");
+                    }
+                    if(/^沙尘暴/.test(str)){
+                        logoChoose("shachenbao");
+                    }
+                    if(/^强沙尘暴/.test(str)){
+                        logoChoose("qingshachenbao");
+                    }
+                }
+        } else {
+            console.log("服务器异常")
+        }
+    }
+    xhr.onerror = function () { console.log("服务器异常") };
+    xhr.send();
+    document.querySelector(".time").innerText=time;
+    document.querySelector(".list").addEventListener("click",function (e) {
+        if(e.target.tagName.toLowerCase() === "li"){
+            document.querySelectorAll(".list li").forEach(
+                function (key) {
+                    key.classList.remove("clicked")
+                });
+            e.target.classList.add("clicked");
+        } else if (e.target.parentElement.tagName.toLowerCase() === "li"){
+            document.querySelectorAll(".list li").forEach(
+                function (key) {
+                    key.classList.remove("clicked")
+                });
+            e.target.parentElement.classList.add("clicked");
+        }
+    })
+</script>
+</body>
+</html>
